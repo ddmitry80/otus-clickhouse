@@ -23,7 +23,7 @@
                 <replica><host>clickhouse4</host><port>9000</port><user>default</user><password>123456</password></replica>
             </shard>
         </c4sh1rep>
-        <c2h2rep>
+        <c2sh2rep>
             <shard>
                 <replica><host>clickhouse1</host><port>9000</port><user>default</user><password>123456</password></replica>
                 <replica><host>clickhouse2</host><port>9000</port><user>default</user><password>123456</password></replica>
@@ -32,7 +32,7 @@
                 <replica><host>clickhouse3</host><port>9000</port><user>default</user><password>123456</password></replica>
                 <replica><host>clickhouse4</host><port>9000</port><user>default</user><password>123456</password></replica>
             </shard>
-        </c2h2rep>
+        </c2sh2rep>
     </remote_servers>
     <zookeeper>
     <node index="1">
