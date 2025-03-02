@@ -1,6 +1,8 @@
 <clickhouse>
     <macros>
-        <shard>01</shard>
+        <shard_c1sh4rep>01</shard_c1sh4rep>
+        <shard_c2sh2rep>02</shard_c2sh2rep>
+        <shard_c4sh1rep>04</shard_c4sh1rep>
         <replica>ch4</replica>
         <cluster>replicated_cluster</cluster>
     </macros>
