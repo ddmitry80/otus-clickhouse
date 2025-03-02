@@ -3,7 +3,8 @@
         <shard_c1sh4rep>01</shard_c1sh4rep>
         <shard_c2sh2rep>01</shard_c2sh2rep>
         <shard_c4sh1rep>02</shard_c4sh1rep>
-        <replica>ch2</replica>
-        <cluster>replicated_cluster</cluster>
+        <replica_c1sh4rep>rep2</replica_c1sh4rep>
+        <replica_c2sh2rep>rep2</replica_c2sh2rep>
+        <replica_c1sh4rep>rep1</replica_c1sh4rep>
     </macros>
 </clickhouse>
