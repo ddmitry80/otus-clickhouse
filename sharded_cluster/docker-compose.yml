@@ -11,6 +11,27 @@ x-configs: &default-configs
   - zookeeper
     
 services:
+  minio:
+    restart: always
+    image: quay.io/minio/minio:RELEASE.2025-03-12T18-04-18Z
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minioadmin
+    # user: ${UID}:${GID}
+    # user: "`id -u`:`id -g`"
+    command: server /data --console-address ":9001"
+    ports:
+      - "9110:9000"  # API
+      - "9111:9001"  # WebUI
+    volumes:
+      - ./minio/data:/data
+      - ./minio/config:/root/.minio
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   zookeeper:
     image: 'bitnami/zookeeper:3.9.3'
     networks:
