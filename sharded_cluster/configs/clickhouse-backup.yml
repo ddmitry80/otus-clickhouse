@@ -53,7 +53,7 @@ s3:
     assume_role_arn: ""
     # force_path_style: false
     force_path_style: true
-    # path: clickhouse
+    path: backups
     object_disk_path: ""
     disable_ssl: false
     compression_level: 1
