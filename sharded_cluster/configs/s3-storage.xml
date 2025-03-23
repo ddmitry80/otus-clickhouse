@@ -1,0 +1,29 @@
+<clickhouse>
+  <storage_configuration>
+    <disks>
+        <s3_minio>
+            <type>s3</type>
+            <endpoint>http://minio:9000/clickhouse/tables/</endpoint>
+            <access_key_id>ch_user</access_key_id>
+            <secret_access_key>ch_password</secret_access_key>
+            <region></region>
+            <metadata_path>/var/lib/clickhouse/disks/s3_minio/</metadata_path>
+        </s3_minio>
+        <s3_minio_cache>
+            <type>cache</type>
+            <disk>s3_minio</disk>
+            <path>/var/lib/clickhouse/disks/s3_minio_cache/</path>
+            <max_size>1Gi</max_size>
+        </s3_minio_cache>
+    </disks>
+    <policies>
+      <minio>
+        <volumes>
+          <main>
+            <disk>s3_minio</disk>
+          </main>
+        </volumes>
+      </minio>
+    </policies>
+  </storage_configuration>
+</clickhouse>
