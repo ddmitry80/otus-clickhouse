@@ -40,9 +40,8 @@ mc admin user add myminio ch_user ch_password
 # Бакет для CH
 mc mb myminio/clickhouse
 # Политики доступа к бакету
-mc admin policy add myminio ch_policy /root/.minio/clickhouse-policy.json
-# mc admin policy attach myminio ch_policy ch_user
-mc admin user setpolicy myminio ch_user ch_policy
+mc admin policy create myminio ch_policy /root/.minio/clickhouse-policy.json
+mc admin policy attach myminio ch_policy --user ch_user
 # Проверить назначенные доступы
 mc admin policy list myminio
 ```
