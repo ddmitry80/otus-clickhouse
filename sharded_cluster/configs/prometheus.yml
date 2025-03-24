@@ -17,6 +17,5 @@ scrape_configs:
       - targets: ["clickhouse4:9126"]
         labels:
           instance: Clickhouse-4
-        
     honor_labels: true
 
