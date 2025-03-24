@@ -26,6 +26,8 @@
 
 ### Настройка Minio
 
+Внимание! При ненастроенном S3 (Minio) кластер Clickhouse не сможет стартовать. Решение проблемы - произвести настройку S3 (указано ниже), либо отключить проброс конфигурации S3 в кластер в разделе `volumes` каждой ноды кластера.
+
 Подключаемся к контейнеру
 ```sh
 docker compose exec -it minio bash
@@ -45,3 +47,22 @@ mc admin policy attach myminio ch_policy --user ch_user
 # Проверить назначенные доступы
 mc admin policy list myminio
 ```
+
+## Мониторинг
+
+### Prometheus
+
+Запускается автоматически. Доступен по http://localhost:9090/
+
+### Grafana
+
+Запускается автоматически. Пароль по умолчанию admin/admin, далее потребуется сменить.
+
+Точка входа http://localhost:3000
+
+Рекомендованый конфиг grafana_14192_rev4.json.
+
+Для настройки сначала подключаем prometheus: Connections -> Add new connection -> Prometheus -> Add new datasource. Connection url: http://prometheus:9090 -> Save & test
+
+Далее - подключаем дашборд Clickhouse: Dashboards -> New -> Import -> указать содержимое файла `grafana_14192_rev4.json` -> Указать ранее подключенный Prometheus.
+
