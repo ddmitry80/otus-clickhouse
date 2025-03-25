@@ -8,5 +8,5 @@ RUN mkdir clickhouse-backup && cd clickhouse-backup &&\
 
 # Полезные утилиты
 RUN apt update && \
-    apt install -y bind9-host bat less iputils-ping && \
+    apt install -y bind9-host bat less iputils-ping curl && \
     apt clean

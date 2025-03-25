@@ -1,6 +1,8 @@
-x-configs: &default-configs
+x-configs: &ch-default-configs
   # image: clickhouse/clickhouse-server:25.1
   build: .
+  environment:
+      TZ: "Europe/Moscow"
   ulimits:
     nproc: 65535
     nofile:
@@ -9,7 +11,7 @@ x-configs: &default-configs
   networks:
     - ch_replicated
   depends_on:
-  - zookeeper
+    - zookeeper
     
 services:
   minio:
@@ -18,6 +20,7 @@ services:
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: minioadmin
+      TZ: "Europe/Moscow"
     # user: ${UID}:${GID}
     # user: "`id -u`:`id -g`"
     command: server /data --console-address ":9001"
@@ -35,6 +38,40 @@ services:
     networks:
       - ch_replicated
 
+  prometheus:
+    image: prom/prometheus:v2.53.4
+    volumes:
+      - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    # container_name: prometheus
+    # hostname: prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    networks:
+      - ch_replicated
+
+  grafana:
+    image: grafana/grafana:11.5.2-ubuntu
+    user: root
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    container_name: grafana
+    hostname: grafana
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+    networks:
+      - ch_replicated
+
   zookeeper:
     image: 'bitnami/zookeeper:3.9.3'
     networks:
@@ -42,55 +79,60 @@ services:
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
       - ZOOKEEPER_CLIENT_PORT=2181
+      - TZ="Europe/Moscow"
     ports:
       - "2182:2181"
       - "2888:2888"
       - "3888:3888"
 
   clickhouse1:
-    <<: *default-configs
+    <<: *ch-default-configs
     volumes:
       - ./configs/default_user.xml:/etc/clickhouse-server/users.d/default_user.xml
       - ./configs/z_config.xml:/etc/clickhouse-server/config.d/z_config.xml
       - ./configs/macros_ch1.xml:/etc/clickhouse-server/config.d/macros.xml
       - ./configs/clickhouse-backup.yml:/etc/clickhouse-backup/config.yml
       - ./configs/s3-storage.xml:/etc/clickhouse-server/config.d/s3-storage.xml
+      - ./configs/prometheus_ch.xml:/etc/clickhouse-server/config.d/s3-prometheus_ch.xml
     ports:
       - "8002:9000"
       - "9123:8123"
       
   clickhouse2:
-    <<: *default-configs
+    <<: *ch-default-configs
     volumes:
       - ./configs/default_user.xml:/etc/clickhouse-server/users.d/default_user.xml
       - ./configs/z_config.xml:/etc/clickhouse-server/config.d/z_config.xml
       - ./configs/macros_ch2.xml:/etc/clickhouse-server/config.d/macros.xml
       - ./configs/clickhouse-backup.yml:/etc/clickhouse-backup/config.yml
       - ./configs/s3-storage.xml:/etc/clickhouse-server/config.d/s3-storage.xml
+      - ./configs/prometheus_ch.xml:/etc/clickhouse-server/config.d/s3-prometheus_ch.xml
     ports:
       - "8003:9000"
       - "9124:8123"
       
   clickhouse3:
-    <<: *default-configs
+    <<: *ch-default-configs
     volumes:
       - ./configs/default_user.xml:/etc/clickhouse-server/users.d/default_user.xml
       - ./configs/z_config.xml:/etc/clickhouse-server/config.d/z_config.xml
       - ./configs/macros_ch3.xml:/etc/clickhouse-server/config.d/macros.xml
       - ./configs/clickhouse-backup.yml:/etc/clickhouse-backup/config.yml
       - ./configs/s3-storage.xml:/etc/clickhouse-server/config.d/s3-storage.xml
+      - ./configs/prometheus_ch.xml:/etc/clickhouse-server/config.d/s3-prometheus_ch.xml
     ports:
       - "8004:9000"
       - "9125:8123"
 
   clickhouse4:
-    <<: *default-configs
+    <<: *ch-default-configs
     volumes:
       - ./configs/default_user.xml:/etc/clickhouse-server/users.d/default_user.xml
       - ./configs/z_config.xml:/etc/clickhouse-server/config.d/z_config.xml
       - ./configs/macros_ch4.xml:/etc/clickhouse-server/config.d/macros.xml
       - ./configs/clickhouse-backup.yml:/etc/clickhouse-backup/config.yml
       - ./configs/s3-storage.xml:/etc/clickhouse-server/config.d/s3-storage.xml
+      - ./configs/prometheus_ch.xml:/etc/clickhouse-server/config.d/s3-prometheus_ch.xml
     ports:
       - "8005:9000"
       - "9126:8123"
