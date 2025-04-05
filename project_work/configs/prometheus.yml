@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 15s
+  
+scrape_configs:
+  - job_name: "clickhouse"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["clickhouse1:9126"]
+        labels:
+          instance: Clickhouse-1
+      - targets: ["clickhouse2:9126"]
+        labels:
+          instance: Clickhouse-2 
+      - targets: ["clickhouse3:9126"]
+        labels:
+          instance: Clickhouse-3
+      - targets: ["clickhouse4:9126"]
+        labels:
+          instance: Clickhouse-4
+    honor_labels: true
+
