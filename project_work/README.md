@@ -42,7 +42,7 @@ ui: http://localhost:8082/
 
 Для подключения из NiFi к сервисам, работающим на локальной машине, вместо `localhost` использовать `host.docker.internal`
 
-### Подключение к БД
+### Подключение NiFi к БД
 
 #### PostgreSQL
 Расположение драйвера в контейнере: `/opt/nifi/nifi-current/drivers/postgresql-42.7.4.jar ` 
@@ -50,6 +50,12 @@ ui: http://localhost:8082/
 - Строка connection: `jdbc:postgresql://posgtgres:5432/app`  
 - Database Driver Class Name: `org.postgresql.Driver`  
 - user/password: `postgres`/`postgres`  
+
+##### Clickhouse
+
+- connection (не работает): `jdbc:ch:http://clickhouse1:9000/default`
+- connection: `jdbc:clickhouse://clickhouse1:8123`
+
 
 ## Мониторинг
 

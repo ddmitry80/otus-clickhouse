@@ -84,7 +84,7 @@ services:
     ports:
       - 18443:8443 # Unsecured HTTP Web Port
     extra_hosts:
-    - "host.docker.internal:host-gateway"
+      - "host.docker.internal:host-gateway"
     environment:
       - SINGLE_USER_CREDENTIALS_USERNAME=admin
       - SINGLE_USER_CREDENTIALS_PASSWORD=Password123456
@@ -93,6 +93,8 @@ services:
       - ./nifi/drivers:/opt/nifi/nifi-current/drivers
       - ./nifi/shared-folder:/opt/nifi/nifi-current/ls-target
       # - ./nifi-conf:/opt/nifi/nifi-current/conf
+    networks:
+      - ch_replicated
 
   kafka:
     image: apache/kafka:3.8.0
@@ -116,6 +118,8 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+    networks:
+      - ch_replicated
 
   kafka-ui:
     container_name: kafka-ui
@@ -124,6 +128,8 @@ services:
       - 8082:8080
     environment:
       DYNAMIC_CONFIG_ENABLED: true
+    networks:
+      - ch_replicated
   
   prometheus:
     image: prom/prometheus:v2.53.4
