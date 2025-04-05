@@ -44,18 +44,13 @@ ui: http://localhost:8082/
 
 ### Подключение NiFi к БД
 
-#### PostgreSQL
-Расположение драйвера в контейнере: `/opt/nifi/nifi-current/drivers/postgresql-42.7.4.jar ` 
-
-- Строка connection: `jdbc:postgresql://posgtgres:5432/app`  
-- Database Driver Class Name: `org.postgresql.Driver`  
-- user/password: `postgres`/`postgres`  
-
 ##### Clickhouse
 
-- connection (не работает): `jdbc:ch:http://clickhouse1:9000/default`
+Настройки DBCPConnectionPool:
 - connection: `jdbc:clickhouse://clickhouse1:8123`
-
+- Database Driver Class Name: `com.clickhouse.jdbc.ClickHouseDriver`
+- Database Driver Location(s): `/opt/nifi/nifi-current/drivers/clickhouse-jdbc-0.7.2-all.jar`
+- user/password: `default`/`123456`
 
 ## Мониторинг
 
