@@ -31,7 +31,9 @@ ui: http://localhost:8082/
 
 При настройке указать:
 - Cluster name: `Kafka Cluster` или любое другое
-- Bootstrap Servers: `PLAINTEXT://kafka` port `29092`
+- Bootstrap Servers:
+    - `PLAINTEXT://kafka1` port `19092`
+    - `PLAINTEXT://kafka2` port `19093`
 
 ## NiFi
 
