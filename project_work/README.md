@@ -29,7 +29,7 @@ doc:
 
 ui: http://localhost:8082/   
 
-При настройке указать:
+Настройка автоматическая. При желании настроить вручную, следует указать:
 - Cluster name: `Kafka Cluster` или любое другое
 - Bootstrap Servers: `PLAINTEXT://kafka` port `29092`
 

@@ -138,9 +138,13 @@ services:
     ports:
       - 8082:8080
     environment:
-      DYNAMIC_CONFIG_ENABLED: true
+      - DYNAMIC_CONFIG_ENABLED=true
+      - KAFKA_CLUSTERS_0_NAME=KafkaCluster
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
     networks:
       - ch_project_work
+    volumes:
+      - kafka-ui-data:/app/data
   
   prometheus:
     image: prom/prometheus:v2.53.4
@@ -212,3 +216,4 @@ volumes:
   nifi_content:
   nifi_provenance:
   nifi_database:
+  kafka-ui-data:
