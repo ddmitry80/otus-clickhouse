@@ -84,3 +84,9 @@ superset db upgrade
 superset init
 superset load_examples
 ```
+
+Заходить:
+- url: http://localhost:8088/superset/welcome/
+- login: admin
+- password: admin
+
