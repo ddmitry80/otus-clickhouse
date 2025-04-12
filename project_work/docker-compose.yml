@@ -38,6 +38,7 @@ services:
       - ./configs/clickhouse-backup.yml:/etc/clickhouse-backup/config.yml
       - ./configs/s3-storage.xml:/etc/clickhouse-server/config.d/s3-storage.xml
       - ./configs/prometheus_ch.xml:/etc/clickhouse-server/config.d/s3-prometheus_ch.xml
+      - ./data:/data
     ports:
       - "8002:9000"
       - "9123:8123"
@@ -51,6 +52,7 @@ services:
       - ./configs/clickhouse-backup.yml:/etc/clickhouse-backup/config.yml
       - ./configs/s3-storage.xml:/etc/clickhouse-server/config.d/s3-storage.xml
       - ./configs/prometheus_ch.xml:/etc/clickhouse-server/config.d/s3-prometheus_ch.xml
+      - ./data:/data
     ports:
       - "8003:9000"
       - "9124:8123"
@@ -64,6 +66,7 @@ services:
       - ./configs/clickhouse-backup.yml:/etc/clickhouse-backup/config.yml
       - ./configs/s3-storage.xml:/etc/clickhouse-server/config.d/s3-storage.xml
       - ./configs/prometheus_ch.xml:/etc/clickhouse-server/config.d/s3-prometheus_ch.xml
+      - ./data:/data
     ports:
       - "8004:9000"
       - "9125:8123"
@@ -77,6 +80,7 @@ services:
       - ./configs/clickhouse-backup.yml:/etc/clickhouse-backup/config.yml
       - ./configs/s3-storage.xml:/etc/clickhouse-server/config.d/s3-storage.xml
       - ./configs/prometheus_ch.xml:/etc/clickhouse-server/config.d/s3-prometheus_ch.xml
+      - ./data:/data
     ports:
       - "8005:9000"
       - "9126:8123"
