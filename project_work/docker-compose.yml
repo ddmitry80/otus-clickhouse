@@ -1,6 +1,8 @@
 x-configs: &ch-default-configs
   # image: clickhouse/clickhouse-server:25.1
-  build: .
+  build:
+    context: .
+    dockerfile: Dockerfile.clickhouse
   environment:
       TZ: "Europe/Moscow"
   ulimits:
@@ -9,7 +11,7 @@ x-configs: &ch-default-configs
       soft: 262144
       hard: 262144
   networks:
-    - ch_replicated
+    - ch_project_work
   depends_on:
     - zookeeper
     
@@ -17,7 +19,7 @@ services:
   zookeeper:
     image: 'bitnami/zookeeper:3.9.3'
     networks:
-      - ch_replicated
+      - ch_project_work
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
       - ZOOKEEPER_CLIENT_PORT=2181
@@ -92,9 +94,14 @@ services:
     volumes:
       - ./nifi/drivers:/opt/nifi/nifi-current/drivers
       - ./nifi/shared-folder:/opt/nifi/nifi-current/ls-target
-      # - ./nifi-conf:/opt/nifi/nifi-current/conf
+      - nifi_conf:/opt/nifi/nifi-current/conf
+      - nifi_flowfiles:/opt/nifi/nifi-current/flowfile_repository
+      - nifi_content:/opt/nifi/nifi-current/content_repository
+      - nifi_provenance:/opt/nifi/nifi-current/provenance_repository
+      - nifi_database:/opt/nifi/nifi-current/database_repository
+      - ./nifi/logs:/opt/nifi/nifi-current/logs
     networks:
-      - ch_replicated
+      - ch_project_work
 
   kafka:
     image: apache/kafka:3.8.0
@@ -119,7 +126,7 @@ services:
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
     networks:
-      - ch_replicated
+      - ch_project_work
 
   kafka-ui:
     container_name: kafka-ui
@@ -129,7 +136,7 @@ services:
     environment:
       DYNAMIC_CONFIG_ENABLED: true
     networks:
-      - ch_replicated
+      - ch_project_work
   
   prometheus:
     image: prom/prometheus:v2.53.4
@@ -145,7 +152,7 @@ services:
     environment:
       TZ: "Europe/Moscow"
     networks:
-      - ch_replicated
+      - ch_project_work
 
   grafana:
     image: grafana/grafana:11.5.2-ubuntu
@@ -163,13 +170,41 @@ services:
     environment:
       TZ: "Europe/Moscow"
     networks:
-      - ch_replicated
+      - ch_project_work
 
+  superset:
+    # image: apache/superset
+    build: 
+      context: .
+      dockerfile: Dockerfile.superset
+    container_name: superset
+    restart: unless-stopped
+    ports:
+      - "8088:8088"
+    networks:
+      - ch_project_work
+    volumes:
+      - superset_data:/var/lib/superset
+      - superset_config:/app/superset_home
+    environment:
+      - SUPERSET_SECRET_KEY=9wc5+erMt60+lxrXDf3RjeIR+zONpEFusO00Np7JzfliMTI1e+RXnHcQ
+      - TZ=Europe/Moscow
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8088/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 networks:
-  ch_replicated:
+  ch_project_work:
     driver: bridge
 
 volumes:
   grafana_lib:
-  
+  superset_data:
+  superset_config:
+  nifi_conf:
+  nifi_flowfiles:
+  nifi_content:
+  nifi_provenance:
+  nifi_database:
