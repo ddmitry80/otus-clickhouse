@@ -1,0 +1,11 @@
+FROM apache/superset:4.1.2-dev
+
+USER root
+
+RUN apt-get update && \
+    apt-get install -y bind9-host bat less iputils-ping curl && \
+    apt-get clean
+
+USER superset
+
+RUN pip install clickhouse-connect==0.8.*

@@ -29,7 +29,7 @@ doc:
 
 ui: http://localhost:8082/   
 
-При настройке указать:
+Настройка автоматическая. При желании настроить вручную, следует указать:
 - Cluster name: `Kafka Cluster` или любое другое
 - Bootstrap Servers: `PLAINTEXT://kafka` port `29092`
 
@@ -70,3 +70,31 @@ ui: http://localhost:8082/
 
 Далее - подключаем дашборд Clickhouse: Dashboards -> New -> Import -> указать содержимое файла `grafana_14192_rev4.json` -> Указать ранее подключенный Prometheus.
 
+### Apache Superset
+
+Используется самый простой способ запуска, в одноконтейнерной конфигурацией и БД SQLite. В контейнер предустановлен clickhouse-connect и набор дополнительных консольных утилит
+
+Инициализация
+```sh
+# Подключаемся к конейнеру
+docker compose exec -it superset bash
+# Следующие команды выполнить внутри контейнера
+superset fab create-admin --username admin --firstname Superset --lastname Admin --email admin@superset.com --password admin
+superset db upgrade
+superset init
+superset load_examples
+```
+
+Заходить:
+- url: http://localhost:8088/superset/welcome/
+- login: admin
+- password: admin
+
+# Подготовка данных
+
+## Загрузка рабочего датасета
+
+```sh
+cd data
+git clone https://github.com/ddmitry80/TelecomX.git
+```
