@@ -90,3 +90,11 @@ superset load_examples
 - login: admin
 - password: admin
 
+# Подготовка данных
+
+## Загрузка рабочего датасета
+
+```sh
+cd data
+git clone https://github.com/ddmitry80/TelecomX.git
+```

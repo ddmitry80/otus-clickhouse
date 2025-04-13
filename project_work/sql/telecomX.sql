@@ -105,7 +105,7 @@ SELECT * FROM stg.tc_plan ORDER BY id;
 -------------
 --- CDR -----
 -------------
-SELECT * FROM file('/var/lib/clickhouse/user_files/data/TelecomX/telecom10k/psx_62.0_2024-01-01 00:10:00.csv', CSVWithNames) limit 100;
+SELECT * FROM file('/var/lib/clickhouse/user_files/data/TelecomX/telecom10k/psx_6*.0_2024-01-01 *:*:*.csv', CSVWithNames) limit 100;
 
 DROP TABLE IF EXISTS stg.tc_cdr_rep  ON CLUSTER c2sh2rep NO DELAY;
 CREATE TABLE stg.tc_cdr_rep ON CLUSTER c2sh2rep
@@ -129,12 +129,8 @@ CREATE TABLE stg.tc_cdr ON CLUSTER c2sh2rep
 AS stg.tc_cdr_rep
 ENGINE = Distributed(c2sh2rep, stg, tc_cdr_rep, idSubscriber);
 
-TRUNCATE stg.tc_cdr_rep  ON CLUSTER c2sh2rep;  -- транкейтим именно реплицированную таблицу
-INSERT INTO stg.tc_cdr (idSession, idPSX, idSubscriber, startSession, endSession, duration, upTx, downTx)
-SELECT IdSession, IdPSX, IdSubscriber, StartSession, EndSession, Duartion, UpTx, DownTx
-FROM file('/var/lib/clickhouse/user_files/data/TelecomX/telecom10k/psx_62.0_2024-01-01 00:10:00.csv', CSVWithNames);
 
-select * from stg.tc_cdr
+--select * from stg.tc_cdr
 
 -- ODS
 CREATE DATABASE ods ON CLUSTER c2sh2rep;
@@ -181,6 +177,14 @@ SELECT
 FROM stg.tc_cdr_rep;
 --where endSession is not null
 
+TRUNCATE stg.tc_cdr_rep  ON CLUSTER c2sh2rep;  -- транкейтим именно реплицированную таблицу
+TRUNCATE ods.tc_cdr_rep  ON CLUSTER c2sh2rep;
 
-select * from ods.tc_cdr;
+
+INSERT INTO stg.tc_cdr (idSession, idPSX, idSubscriber, startSession, endSession, duration, upTx, downTx)
+SELECT IdSession, IdPSX, IdSubscriber, StartSession, EndSession, Duartion, UpTx, DownTx
+FROM file('/var/lib/clickhouse/user_files/data/TelecomX/telecom100k/psx_6*.0_2024-01-01 *:*:*.csv', CSVWithNames);
+
+SELECT count() FROM ods.tc_cdr;
+SELECT * FROM ods.tc_cdr;
 
