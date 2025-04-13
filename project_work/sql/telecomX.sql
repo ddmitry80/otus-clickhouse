@@ -165,7 +165,7 @@ SELECT
     idSession
     , idPSX
     , idSubscriber
-    , parseDateTime(startSession, '%d-%m-%Y %H:%i:%s') as startSesstion
+    , parseDateTime(startSession, '%d-%m-%Y %H:%i:%s') as startSession
     , CASE WHEN endSession IS NULL
         THEN NULL
         ELSE parseDateTimeBestEffort(endSession)
@@ -175,7 +175,6 @@ SELECT
     , downTx
     , created_at
 FROM stg.tc_cdr_rep;
---where endSession is not null
 
 TRUNCATE stg.tc_cdr_rep  ON CLUSTER c2sh2rep;  -- транкейтим именно реплицированную таблицу
 TRUNCATE ods.tc_cdr_rep  ON CLUSTER c2sh2rep;
@@ -183,8 +182,11 @@ TRUNCATE ods.tc_cdr_rep  ON CLUSTER c2sh2rep;
 
 INSERT INTO stg.tc_cdr (idSession, idPSX, idSubscriber, startSession, endSession, duration, upTx, downTx)
 SELECT IdSession, IdPSX, IdSubscriber, StartSession, EndSession, Duartion, UpTx, DownTx
-FROM file('/var/lib/clickhouse/user_files/data/TelecomX/telecom100k/psx_6*.0_2024-01-01 *:*:*.csv', CSVWithNames);
+FROM file('/var/lib/clickhouse/user_files/data/TelecomX/telecom100k/psx_6*.0_2024-01-* *:*:*.csv', CSVWithNames);
 
 SELECT count() FROM ods.tc_cdr;
 SELECT * FROM ods.tc_cdr;
 
+select uniq(idSubscriber) from ods.tc_cdr cdr
+
+select DISTINCT (startSession) from stg.tc_cdr order by 1 ;
