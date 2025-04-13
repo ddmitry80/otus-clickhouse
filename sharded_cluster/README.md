@@ -48,6 +48,10 @@ mc admin policy attach myminio ch_policy --user ch_user
 mc admin policy list myminio
 ```
 
+## Postgres
+
+Подключаться снаружи по порту 6432.
+
 ## Мониторинг
 
 ### Prometheus
