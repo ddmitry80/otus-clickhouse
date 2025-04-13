@@ -40,8 +40,8 @@ services:
     image: postgres:17
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: your_password
-      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: demo
       TZ: "Europe/Moscow"
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -75,7 +75,7 @@ services:
     volumes:
       - grafana_lib:/var/lib/grafana
       - ./configs/grafana/provisioning/:/etc/grafana/provisioning/
-    container_name: grafana
+    # container_name: grafana
     hostname: grafana
     restart: unless-stopped
     environment:

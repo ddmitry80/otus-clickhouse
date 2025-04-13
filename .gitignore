@@ -1,3 +1,5 @@
 sharded_cluster/minio/data
 sharded_cluster/grafana
 project_work/data/TelecomX
+sharded_cluster/postgres/demo-big-en.zip
+sharded_cluster/postgres/datasets
