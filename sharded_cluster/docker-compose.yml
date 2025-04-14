@@ -9,7 +9,7 @@ x-configs: &ch-default-configs
       soft: 262144
       hard: 262144
   networks:
-    - ch_replicated
+    - ch_sharded
   depends_on:
     - zookeeper
     
@@ -21,14 +21,12 @@ services:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: minioadmin
       TZ: "Europe/Moscow"
-    # user: ${UID}:${GID}
-    # user: "`id -u`:`id -g`"
     command: server /data --console-address ":9001"
     ports:
       - "9110:9000"  # API
       - "9111:9001"  # WebUI
     volumes:
-      - ./minio/data:/data
+      - minio_data:/data
       - ./minio/config:/root/.minio
     healthcheck:
       test: ["CMD", "mc", "ready", "local"]
@@ -36,14 +34,27 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - ch_replicated
+      - ch_sharded
+
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: demo
+      TZ: "Europe/Moscow"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "6432:5432"
+    restart: unless-stopped
+    networks:
+      - ch_sharded
 
   prometheus:
     image: prom/prometheus:v2.53.4
     volumes:
       - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    # container_name: prometheus
-    # hostname: prometheus
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     ports:
@@ -52,7 +63,7 @@ services:
     environment:
       TZ: "Europe/Moscow"
     networks:
-      - ch_replicated
+      - ch_sharded
 
   grafana:
     image: grafana/grafana:11.5.2-ubuntu
@@ -62,20 +73,20 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./grafana:/var/lib/grafana
-      - ./grafana/provisioning/:/etc/grafana/provisioning/
-    container_name: grafana
+      - grafana_lib:/var/lib/grafana
+      - ./configs/grafana/provisioning/:/etc/grafana/provisioning/
+    # container_name: grafana
     hostname: grafana
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
     networks:
-      - ch_replicated
+      - ch_sharded
 
   zookeeper:
     image: 'bitnami/zookeeper:3.9.3'
     networks:
-      - ch_replicated
+      - ch_sharded
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
       - ZOOKEEPER_CLIENT_PORT=2181
@@ -138,6 +149,10 @@ services:
       - "9126:8123"
 
 networks:
-  ch_replicated:
+  ch_sharded:
     driver: bridge
   
+volumes:
+  grafana_lib:
+  minio_data:
+  postgres_data:

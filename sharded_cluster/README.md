@@ -48,6 +48,25 @@ mc admin policy attach myminio ch_policy --user ch_user
 mc admin policy list myminio
 ```
 
+## Postgres
+
+Подключаться снаружи по порту 6432.
+
+Запуск `psql':
+```sh
+docker compose exec -it postgres psql -d postgres -U postgres
+docker compose exec -it postgres bash
+```
+
+### Загрузка демо датасета
+
+```sh
+cd postgres
+wget https://edu.postgrespro.com/demo-big-en.zip
+unzip demo-big-en.zip -d ./datasets/
+docker compose exec -T postgres psql -d postgres -U postgres < datasets/demo-big-en-20170815.sql
+```
+
 ## Мониторинг
 
 ### Prometheus

@@ -1,4 +1,4 @@
-FROM clickhouse/clickhouse-server:25.1
+FROM clickhouse:25.3.2.39-jammy
 
 # install clickhouse-backup
 RUN mkdir clickhouse-backup && cd clickhouse-backup &&\
