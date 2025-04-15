@@ -109,8 +109,6 @@ services:
 
   kafka:
     image: apache/kafka:3.8.0
-    hostname: kafka
-    container_name: kafka
     ports:
       - 9092:9092
     environment:
@@ -150,8 +148,6 @@ services:
     image: prom/prometheus:v2.53.4
     volumes:
       - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    # container_name: prometheus
-    # hostname: prometheus
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     ports:
@@ -172,7 +168,6 @@ services:
     volumes:
       - grafana_lib:/var/lib/grafana
       - ./configs/grafana/provisioning/:/etc/grafana/provisioning/
-    container_name: grafana
     hostname: grafana
     restart: unless-stopped
     environment:
@@ -185,7 +180,6 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile.superset
-    container_name: superset
     restart: unless-stopped
     ports:
       - "8088:8088"
