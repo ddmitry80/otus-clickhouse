@@ -75,8 +75,6 @@ services:
     volumes:
       - grafana_lib:/var/lib/grafana
       - ./configs/grafana/provisioning/:/etc/grafana/provisioning/
-    # container_name: grafana
-    hostname: grafana
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
