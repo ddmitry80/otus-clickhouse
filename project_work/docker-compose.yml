@@ -131,7 +131,6 @@ services:
       - ch_project_work
 
   kafka-ui:
-    container_name: kafka-ui
     image: provectuslabs/kafka-ui:v0.7.2
     ports:
       - 8082:8080
@@ -168,7 +167,6 @@ services:
     volumes:
       - grafana_lib:/var/lib/grafana
       - ./configs/grafana/provisioning/:/etc/grafana/provisioning/
-    hostname: grafana
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
